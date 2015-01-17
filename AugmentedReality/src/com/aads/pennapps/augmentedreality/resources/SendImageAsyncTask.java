@@ -51,7 +51,7 @@ public class SendImageAsyncTask extends AsyncTask<Void, Integer, Long>{
 	            try {
 	            	uploadPictureToServer(photo);
 	            } catch (Exception e) {
-	            	
+	            	Log.e(TAG, e.getMessage());
 	            }
 	        return null;
 	    }
