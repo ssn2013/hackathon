@@ -22,16 +22,15 @@ import android.widget.Toast;
 public class CameraActivity extends ActionBarActivity{
 
 	protected static final String TAG = "CameraActivity";
-	private Camera mCamera;
-	private CameraPreview mPreview;
+	private static Camera mCamera;
+	private static CameraPreview mPreview;
 	
 	private static Camera.PictureCallback mPicture = new Camera.PictureCallback() {
 
 	    @Override
 	    public void onPictureTaken(byte[] data, Camera camera) {
 
-	    	Log.d(CameraActivity.this.TAG, "Picture callback called");
-	    	//Toast.makeText(CameraActivity.this, "Capture started", Toast.LENGTH_SHORT);
+	    	Log.d(TAG, "Picture callback called");
 	        //Access storage to store
 	        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
 	                Environment.DIRECTORY_PICTURES), "AugmentedReality");
@@ -44,6 +43,7 @@ public class CameraActivity extends ActionBarActivity{
 	        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 	        File mediaFile = new File(mediaStorageDir.getPath() + File.separator +
 	                "IMG_"+ timeStamp + ".jpg");
+	        Log.d(TAG, "Picture callback called");
 	        
 	        if (mediaFile == null){
 	            Log.d(TAG, "Error creating media file, check storage permissions");
@@ -78,6 +78,11 @@ public class CameraActivity extends ActionBarActivity{
 			
 			@Override
 			public void onFinish() {
+				Toast.makeText(CameraActivity.this, "Timer ended" , Toast.LENGTH_SHORT).show();
+				if(mCamera==null)
+					Log.e("EXCEPTIONInCAMERA", "mCamera");
+				if(mPicture==null)
+					Log.e("EXCEPTIONInCAMERA", "mPicture");
 				mCamera.takePicture(null, null, mPicture);
 			}
 		}.start();
@@ -89,6 +94,18 @@ public class CameraActivity extends ActionBarActivity{
 		preview.addView(mPreview);
 	}
 	
+//	@Override
+//	public void onResume() {
+//		super.onResume();
+//		mCamera = getCameraInstance();
+//	}
+//
+//	@Override
+//	public void onPause() {
+//		super.onPause();
+//		mCamera.release();
+//	}
+//	
 	public static Camera getCameraInstance(){
 	    Camera c = null;
 	    try {

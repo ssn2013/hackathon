@@ -40,12 +40,9 @@ public class MainActivity extends ActionBarActivity {
     }
     
     public void clickButton(View view) {
-    	Toast.makeText(this, "Button clicked!", Toast.LENGTH_SHORT).show();
     	if(checkCameraHardware(this)) {
     		Intent intent = new Intent(this, CameraActivity.class);
     		startActivity(intent);
-    		
-    		
     	} else {
     		Toast.makeText(this, "Na na na na na!", Toast.LENGTH_SHORT).show();
     	}
