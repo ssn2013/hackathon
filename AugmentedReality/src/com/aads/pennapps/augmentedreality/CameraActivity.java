@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.aads.pennapps.augmentedreality.resources.CameraPreview;
+import com.aads.pennapps.augmentedreality.resources.SendImageAsyncTask;
 
 import android.hardware.Camera;
 import android.os.Bundle;
@@ -54,6 +55,10 @@ public class CameraActivity extends ActionBarActivity{
 	            FileOutputStream fos = new FileOutputStream(mediaFile);
 	            fos.write(data);
 	            fos.close();
+	            
+	            //send to server
+	            new SendImageAsyncTask().execute();
+	            Log.d("ASYNCTASK", "called asynctask");
 	        } catch (FileNotFoundException e) {
 	            Log.d(TAG, "File not found: " + e.getMessage());
 	        } catch (IOException e) {
@@ -79,10 +84,6 @@ public class CameraActivity extends ActionBarActivity{
 			@Override
 			public void onFinish() {
 				Toast.makeText(CameraActivity.this, "Timer ended" , Toast.LENGTH_SHORT).show();
-				if(mCamera==null)
-					Log.e("EXCEPTIONInCAMERA", "mCamera");
-				if(mPicture==null)
-					Log.e("EXCEPTIONInCAMERA", "mPicture");
 				mCamera.takePicture(null, null, mPicture);
 			}
 		}.start();
