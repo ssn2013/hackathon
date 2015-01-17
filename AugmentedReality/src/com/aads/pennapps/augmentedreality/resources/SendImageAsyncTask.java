@@ -2,6 +2,7 @@ package com.aads.pennapps.augmentedreality.resources;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -75,8 +76,7 @@ public class SendImageAsyncTask extends AsyncTask<Void, Integer, Long>{
 
 	        Log.d(TAG, ""+response.getStatusLine());
 	        if (resEntity != null) {
-	          System.out.println(EntityUtils.toString(resEntity));
-	          Log.d(TAG, EntityUtils.toString(resEntity));
+	          Log.d(TAG, "Response: "+EntityUtils.toString(resEntity));
 	        }
 	        if (resEntity != null) {
 	          resEntity.consumeContent();
