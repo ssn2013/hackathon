@@ -8,8 +8,13 @@
     android:id="@+id/camera_preview"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:layout_weight="1"
-    />
+    android:layout_weight="1">
+ 
+     <include
+        android:id="@+id/text_overlay_layout1"
+        layout="@layout/text_overlay_layout" />     
+      
+  </FrameLayout>
 
   <Button
     android:id="@+id/button_capture"

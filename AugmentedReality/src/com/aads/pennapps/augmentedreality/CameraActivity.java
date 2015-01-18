@@ -17,6 +17,8 @@ import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -25,47 +27,6 @@ public class CameraActivity extends ActionBarActivity{
 	protected static final String TAG = "CameraActivity";
 	private static Camera mCamera;
 	private static CameraPreview mPreview;
-	
-	private static Camera.PictureCallback mPicture = new Camera.PictureCallback() {
-
-	    @Override
-	    public void onPictureTaken(byte[] data, Camera camera) {
-
-	    	Log.d(TAG, "Picture callback called");
-	        //Access storage to store
-	        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-	                Environment.DIRECTORY_PICTURES), "AugmentedReality");
-	        if (! mediaStorageDir.exists()){
-	            if (! mediaStorageDir.mkdirs()){
-	                Log.d(TAG, "failed to create directory");
-	                return;
-	            }
-	        }
-	        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-	        File mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-	                "IMG_"+ timeStamp + ".jpg");
-	        Log.d(TAG, "Picture callback called");
-	        
-	        if (mediaFile == null){
-	            Log.d(TAG, "Error creating media file, check storage permissions");
-	            return;
-	        }
-
-	        try {
-	            FileOutputStream fos = new FileOutputStream(mediaFile);
-	            fos.write(data);
-	            fos.close();
-	            
-	            //send to server
-	            new SendImageAsyncTask().execute();
-	            Log.d("ASYNCTASK", "called asynctask");
-	        } catch (FileNotFoundException e) {
-	            Log.d(TAG, "File not found: " + e.getMessage());
-	        } catch (IOException e) {
-	            Log.d(TAG, "Error accessing file: " + e.getMessage());
-	        }
-	    }
-	};
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -84,7 +45,9 @@ public class CameraActivity extends ActionBarActivity{
 			@Override
 			public void onFinish() {
 				Toast.makeText(CameraActivity.this, "Timer ended" , Toast.LENGTH_SHORT).show();
-				mCamera.takePicture(null, null, mPicture);
+				//new SendImageAsyncTask().execute(mCamera);
+				//mCamera.startPreview();
+				textOverlay();
 			}
 		}.start();
 		Toast.makeText(this, "Timer started", Toast.LENGTH_SHORT).show();
@@ -95,18 +58,30 @@ public class CameraActivity extends ActionBarActivity{
 		preview.addView(mPreview);
 	}
 	
-//	@Override
-//	public void onResume() {
-//		super.onResume();
-//		mCamera = getCameraInstance();
-//	}
-//
-//	@Override
-//	public void onPause() {
-//		super.onPause();
-//		mCamera.release();
-//	}
-//	
+	private void textOverlay() {
+		TextView editText = (TextView)findViewById(R.id.overlay_textview);
+		editText.setText("HEllow WORLD!!");
+		RelativeLayout relativeLayoutOverlay = (RelativeLayout)findViewById(R.id.text_overlay_layout1);
+		relativeLayoutOverlay.bringToFront();
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		try {
+			mCamera.reconnect();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		mCamera.release();
+	}
+	
 	public static Camera getCameraInstance(){
 	    Camera c = null;
 	    try {
